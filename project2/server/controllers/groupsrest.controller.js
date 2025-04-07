@@ -15,17 +15,26 @@ const allGroups =
       } 
    }
 
-const getStudentInGroup = async (req,res) =>{
-   try{
-      const groupNumber = parseInt(req.params.groupNumber);
-      const groupAssignments = await Groups.find({groups : groupNumber}).populate('student');
-      const students = groupAssignments.map(g => g.student);
-      res.status(200).json(students);
-   } catch(err){
-      res.status(500).json({error : err.message} )
+   const getStudentInGroup = async (req,res) =>{
+      try{
+         // Afficher les paramètres de la requête pour le débogage
+         console.log("Paramètres de la requête:", req.params);
+         
+         const groupNumber = parseInt(req.params.groupNumber);
+         console.log("Recherche de groupNumber:", groupNumber);
+         
+         const groupAssignments = await Groups.find({groups : groupNumber}).populate('student');
+         console.log("Groupes trouvés:", groupAssignments.length);
+         
+         const students = groupAssignments.map(g => g.student);
+         console.log("Étudiants extraits:", students.length);
+         
+         res.status(200).json(students);
+      } catch(err){
+         console.error("Erreur dans getStudentInGroup:", err);
+         res.status(500).json({error : err.message} )
+      }
    }
-} 
-
 const getStudentWithoutGroup = async (req,res) =>{
    try{
       const studentsWithGroup = await Groups.distinct('student');
@@ -67,15 +76,21 @@ const assignStudentToGroup = async (req, res) => {
 
 const removeFromGroup = async(req, res) =>{
    try{
-      const studentId = req.params.studentId;
-
+      const studentId = req.params.studentId; // ou req.params.id selon votre choix
+      console.log("Tentative de suppression pour l'étudiant ID:", studentId);
+      
       const result = await Groups.findOneAndDelete({student : studentId});
+      console.log("Résultat de la suppression:", result);
+      
       if(!result){
-         return res.status(404).json({error : "pas d'étudiant trouvé"} );
+         console.log("Aucun enregistrement trouvé pour cet étudiant");
+         return res.status(404).json({error : "pas d'étudiant trouvé"});
       }
+      
       res.status(200).json({message : "Etudiant retiré du groupe"});
    } 
    catch (err) {
+      console.error("Erreur lors de la suppression:", err);
       res.status(500).json({ error: err.message });
    }
 }

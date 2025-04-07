@@ -25,7 +25,7 @@ module.exports = studentSchema;
 
 // schema must be "compiled" into a model and "bound" to a collection of a database managed by a connection
 const dbConnection = require('../controllers/db.controller');
-const Student = dbConnection.model('Tasks',studentSchema,'student');
+const Student = dbConnection.model('Student',studentSchema,'student');
 
 // export the model
 module.exports.model = Student;

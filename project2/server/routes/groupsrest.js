@@ -7,7 +7,7 @@ const controller = require('../controllers/groupsrest.controller');
 // use different method to provide REST operations
 router.get('/', controller.allGroups);
 router.get('/no-group', controller.getStudentWithoutGroup);
-router.get('/:groupNUmber', controller.getStudentInGroup);
+router.get('/:groupNumber', controller.getStudentInGroup);
 router.post('/assign', controller.assignStudentToGroup);
 router.delete('/:id', controller.removeFromGroup);
 
